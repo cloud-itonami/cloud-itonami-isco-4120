@@ -61,15 +61,15 @@ human-in-the-loop interrupt/resume via checkpointing.
                                            +-> :hold               (:hard? true)
 ```
 
-- `src/secretarial/store.cljc` — `Store` protocol + `MemStore`:
+- `src/secretarial/store.cljk` — `Store` protocol + `MemStore`:
   registered clients, committed records, an append-only audit ledger.
-- `src/secretarial/advisor.cljc` — `Advisor` protocol; `mock-advisor`
+- `src/secretarial/advisor.cljk` — `Advisor` protocol; `mock-advisor`
   (deterministic, default) proposes a secretarial operation from a
   request; `llm-advisor` wraps a `langchain.model/ChatModel` — either
   way the advisor only ever produces a `:propose`-effect proposal,
   never a committed record, and LLM parse failures always yield
   `confidence 0.0` (forces escalation, never fabricated confidence).
-- `src/secretarial/governor.cljc` — `SecretarialGovernor/check`: a
+- `src/secretarial/governor.cljk` — `SecretarialGovernor/check`: a
   pure function, wired as its own `:govern` node. Hard invariants
   (unregistered client, a proposal whose `:effect` isn't `:propose`)
   always route to `:hold`. Escalation invariants
@@ -81,7 +81,7 @@ human-in-the-loop interrupt/resume via checkpointing.
   that disclosing confidential correspondence and committing an
   employer to a contract without authorization always require human
   sign-off.
-- `src/secretarial/actor.cljc` — `build-graph`, `run-request!`,
+- `src/secretarial/actor.cljk` — `build-graph`, `run-request!`,
   `approve!`: the `langgraph.graph/state-graph` wiring itself.
 
 ```bash
