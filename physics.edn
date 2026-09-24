@@ -1,0 +1,31 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README "Robotics premise": a document-handling robot performs physical
+;; filing, mail sorting and meeting-room preparation (ISCO 4120). Its physical
+;; work is filing folders into a cabinet drawer, and wheeling a refreshment
+;; cart to the meeting room.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-4120"
+ :cases
+ [{:id :folder-to-filing-cabinet
+   :kind :manipulator
+   :procedure "arm lifts a correspondence folder from the desk tray into the top drawer of the filing cabinet"
+   :params {:l1-m 0.45 :l2-m 0.40 :m1-kg 3.5 :m2-kg 2.5
+            :from [0.50 0.10] :to [0.30 0.65] :duration-s 2.0 :steps 400}
+   :sweep {:param :payload-kg :values [0.2 0.5 1.0 2.5 5.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 60.0 :basis "estimate: continuous shoulder torque of a light collaborative arm (~5 kg class)"}
+   :boundary {:lo 0.05 :hi 20.0}}
+  {:id :refreshment-cart-to-meeting-room
+   :kind :transport
+   :procedure "robot wheels a refreshment cart (urns, cups, stacked trays) to the meeting room and stops at the door; stacking height sets the centre of gravity"
+   :params {:mass-kg 35.0 :payload-kg 15.0 :distance-m 40.0 :v-max-mps 0.8 :a-max-mps2 0.4
+            :brake-decel-mps2 1.2 :drive-force-n 100.0 :crr 0.02
+            :support-half-length-m 0.22}
+   :sweep {:param :cog-height-m :values [0.5 0.7 0.9 1.1 1.3]}
+   :quantity :min-tipover-margin
+   :limit {:min 0.4 :basis "estimate: liquids slosh, so keep 40% of the static tip-over moment in reserve"}
+   :boundary {:lo 0.2 :hi 2.5}}]}
